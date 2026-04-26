@@ -1,0 +1,29 @@
+import os
+import subprocess
+from datetime import datetime
+
+REPO_URL = "https://github.com/siddharthgajbhare/attend.git"
+REPO_DIR = "attend"
+
+def setup_repo():
+    """Run this once to clone/init the repo"""
+    if not os.path.exists(REPO_DIR):
+        subprocess.run(["git", "clone", REPO_URL, REPO_DIR])
+    os.chdir(REPO_DIR)
+
+def make_commit():
+    """Run this daily to make a contribution"""
+    os.chdir(REPO_DIR)
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    with open("log.txt", "a") as f:
+        f.write(f"Contribution at {now}\n")
+    
+    subprocess.run(["git", "add", "."])
+    subprocess.run(["git", "commit", "-m", f"contribution: {now}"])
+    subprocess.run(["git", "push", "origin", "main"])
+    print(f"✅ Committed at {now}")
+
+# --- Run ---
+setup_repo()
+make_commit()
